@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+#
 # Copyright (C) 2011 by OD Consultancy Ltd.
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,4 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-# TODO..
+from distutils.core import setup
+
+setup(name='fastspring',
+      version='0.1',
+      description='FastSpring/Saasy client library',
+      author='Olly Smith',
+      author_email='ollysmith@projectfusion.com',
+      url='http://github.com/projectfusion/fastspring',
+      py_modules=['fastspring'],
+      install_requires=['httplib2>=0.7.1'],
+     )

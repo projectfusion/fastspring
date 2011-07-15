@@ -1,15 +1,17 @@
+#!/usr/bin/env python
+#
 # Copyright (C) 2011 by OD Consultancy Ltd.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -105,7 +107,7 @@ class TestSequenceFunctions(unittest.TestCase):
         self.assertEqual(qs['pass'][0], "test_password")
         self.fastspring.http.request.return_value = (self.mock_response(404), "Not found")
         self.assertRaises(fastspring.FastSpringRequestError, self.fastspring.get_subscription, "test_reference")
-        
+
     def test_update_subscription(self):
         # make sure the correct URL is requested and that errors are
         # reported correctly
@@ -153,7 +155,7 @@ class TestSequenceFunctions(unittest.TestCase):
         # test error handling
         self.fastspring.http.request.return_value = (self.mock_response(404), "Not found")
         self.assertRaises(fastspring.FastSpringRequestError, self.fastspring.update_subscription, "test_reference", product_path="/test_product")
-    
+
     def test_delete_subscription(self):
         # make sure the correct URL is requested, that data is parsed
         # correctly and that errors are reported correctly
@@ -177,8 +179,7 @@ class TestSequenceFunctions(unittest.TestCase):
         # test error handling
         self.fastspring.http.request.return_value = (self.mock_response(404), "Not found")
         self.assertRaises(fastspring.FastSpringRequestError, self.fastspring.delete_subscription, "test_reference")
-        
-    
+
     def test_get_localised_price(self):
         # make sure the correct URL is requested, that data is parsed
         # correctly and errors are reported correctly
@@ -201,7 +202,7 @@ class TestSequenceFunctions(unittest.TestCase):
         # test error handling
         self.fastspring.http.request.return_value = (self.mock_response(404), "Not found")
         self.assertRaises(fastspring.FastSpringRequestError, self.fastspring.get_localised_price, "/test_product", "127.0.0.1", "127.0.0.2", "en")
-    
+
     def test_short_order_url(self):
         # make sure the correct URL is returned
         self.assertEqual(self.fastspring.short_order_url("/test_product"), "https://sites.fastspring.com/test_company/instant/test_product")
