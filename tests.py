@@ -207,6 +207,8 @@ class TestSequenceFunctions(unittest.TestCase):
         # make sure the correct URL is returned
         self.assertEqual(self.fastspring.short_order_url("/test_product"), "https://sites.fastspring.com/test_company/instant/test_product")
         self.assertEqual(self.fastspring.short_order_url("/test_product", referrer="test_referrer"), "https://sites.fastspring.com/test_company/instant/test_product?referrer=test_referrer")
+        self.assertEqual(self.fastspring.short_order_url("/test_product", test_mode=True), "https://sites.fastspring.com/test_company/instant/test_product?mode=test")
+        self.assertEqual(self.fastspring.short_order_url("/test_product", referrer="test_referrer", test_mode=True), "https://sites.fastspring.com/test_company/instant/test_product?referrer=test_referrer&mode=test")
 
 if __name__ == '__main__':
     unittest.main()

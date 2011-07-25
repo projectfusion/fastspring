@@ -28,7 +28,7 @@ from xml.etree import ElementTree
 import httplib2
 
 class FastSpringRequestError(Exception):
-    
+
     def __init__(self, response, content):
         self.code = response.status
         self.content = content
@@ -38,11 +38,11 @@ class FastSpringRequestError(Exception):
 class XMLResponse(object):
     """A really simple object for querying XML data returned from 
     fastspring requests.
-    
+
     """
     def __init__(self, xml):
         self.xml = ElementTree.XML(xml)
-    
+
     def __getitem__(self, key):
         attr = self.xml.find(key)
         return attr != None and attr.text or None    
@@ -50,11 +50,11 @@ class XMLResponse(object):
 
 class Subscription(XMLResponse):
     """A response from the get_subscription call.
-    
+
     """
     def __init__(self, xml):
         super(Subscription, self).__init__(xml)
-    
+
     @property
     def is_active(self):
         return self['status'] == 'active'
@@ -62,10 +62,10 @@ class Subscription(XMLResponse):
 
 class FastSpring(object):
     """FastSpring interface class."""
-    
+
     def __init__(self, company, username, password):
         """Create a new instance, set up auth parameters.
-        
+
         """
         self.api_url_base = "https://api.fastspring.com/company/"+company
         self.store_url_base = "://sites.fastspring.com/"+company
@@ -74,7 +74,7 @@ class FastSpring(object):
         self.password = password
         self.auth_params = urllib.urlencode({"user": username, "pass": password})
         self.http = httplib2.Http()
-    
+
     def get_subscription(self, reference):
         """Get subscription details."""
         url = "%s/subscription/%s?%s" % (self.api_url_base, reference, self.auth_params)
@@ -82,10 +82,10 @@ class FastSpring(object):
         if response.status != 200:
             raise FastSpringRequestError(response, content)
         return Subscription(content)
-    
+
     def update_subscription(self, reference, product_path=None, quantity=None, no_end_date=None, coupon=None, proration=None):
         """Update subscription details.
-        
+
         <subscription>
             <productPath>(optional)</productPath>
             <quantity>(optional)</quantity>
@@ -93,7 +93,7 @@ class FastSpring(object):
             <coupon>(optional)</coupon>
             <proration>true|false (optional)</proration>
         </subscription>
-        
+
         """
         root = ElementTree.Element("subscription")
         if product_path is not None:
@@ -113,19 +113,19 @@ class FastSpring(object):
 
     def delete_subscription(self, reference):
         """Delete a subscription.
-        
+
         """
         url = "%s/subscription/%s?%s" % (self.api_url_base, reference, self.auth_params)
         response, content = self.http.request(url, method="DELETE")
         if response.status != 200:
             raise FastSpringRequestError(response, content)
         return Subscription(content)
-    
+
     def get_localised_price(self, product_path, remote_addr, x_forwarded_for, accept_language):
         """Get a localisted price based on HTTP request headers.
-        
+
         Returns a HTML-ified value (eg $10.00 or 10.00&eur;).
-        
+
         """
         args = urllib.urlencode({"product_1_path": product_path,
                                  "user_remote_addr": remote_addr,
@@ -141,11 +141,17 @@ class FastSpring(object):
         else:
             return None
 
-    def short_order_url(self, product_path, referrer=None):
+    def short_order_url(self, product_path, referrer=None, test_mode=False):
         """Get a link to an order page on the store for the given product.
-        
+
         """
         url = "https%s/instant%s" % (self.store_url_base, product_path)
+        args = {}
         if referrer is not None:
-            url = "%s?%s" % (url, urllib.urlencode({"referrer": referrer}))
+            args['referrer'] = referrer
+        if test_mode != False:
+            args['mode'] = 'test'
+        if args:
+            url = "%s?%s" % (url, urllib.urlencode(args))
         return url
+
